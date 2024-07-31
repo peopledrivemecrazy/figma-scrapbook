@@ -2,4 +2,4 @@
 	export let data;
 </script>
 
-<code><pre>{JSON.stringify(data)}</pre></code>
+<code><pre>{JSON.stringify(data, null, 4)}</pre></code>
