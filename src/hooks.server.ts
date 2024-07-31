@@ -25,8 +25,7 @@ const setCookies = (
 		maxAge: tokens.expires_in
 	});
 };
- 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars 
+
 const refreshTokens = async (cookies: Cookies, currentRefreshToken: string) => {
 	try {
 		const tokens = await refreshSession(currentRefreshToken);
@@ -41,20 +40,27 @@ const refreshTokens = async (cookies: Cookies, currentRefreshToken: string) => {
 };
 
 export const handle: Handle = async ({ event, resolve }) => {
-	const { cookies, url, locals } = event;
+	const { cookies, url, locals, route } = event;
 	const access_token = cookies.get('access_token');
 	const refresh_token = cookies.get('refresh_token');
-
-	if (url.pathname === '/auth') {
-		return await resolve(event);
-	}
-	if (url.pathname === '/auth/login') {
+	if (url.pathname === '/auth/login' || route.id?.includes('(auth)')) {
 		return await resolve(event);
 	}
 
-	if (!access_token || !refresh_token) {
+	if (!access_token) {
+		if (refresh_token) {
+			const tokens = await refreshTokens(cookies, refresh_token);
+			if (tokens) {
+				return redirect(307, '/');
+			}
+		}
 		return redirect(307, '/auth/login');
 	}
+
+	if (url.pathname === '/auth/login' && access_token) {
+		return redirect(307, '/');
+	}
+
 	const response = await fetch('https://api.figma.com/v1/me', {
 		headers: {
 			Authorization: `Bearer ${access_token}`
@@ -64,6 +70,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	locals.access_token = access_token;
 	locals.user = user;
+
 	return await resolve(event);
 };
 
@@ -72,7 +79,7 @@ export const handleFetch: HandleFetch = async ({ request, event }) => {
 	if (access_token) {
 		request.headers.set('Authorization', `Bearer ${access_token}`);
 	} else {
-		redirect(307, '/auth/login');
+		throw redirect(307, '/auth/login');
 	}
 	return await fetch(request);
 };

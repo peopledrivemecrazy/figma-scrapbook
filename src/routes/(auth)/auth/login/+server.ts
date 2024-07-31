@@ -12,6 +12,12 @@ export const POST: RequestHandler = async ({ cookies }) => {
 		maxAge: 60 * 10 // 10 min
 	});
 
-	const url: URL = await figma.createAuthorizationURL(state, ['files:read', 'file_comments:write']);
+	const url: URL = await figma.createAuthorizationURL(state, [
+		'files:read',
+		'file_comments:write',
+		'file_variables:write',
+		'file_dev_resources:write',
+		'webhooks:write'
+	]);
 	return json({ uri: url.href });
 };

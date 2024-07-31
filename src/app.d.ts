@@ -7,8 +7,8 @@ declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			access_token: string;
-			user: User;
+			access_token: string | undefined;
+			user: User | undefined;
 		}
 		// interface PageData {}
 		// interface PageState {}
