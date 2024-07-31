@@ -1,16 +1,16 @@
-<script lang="ts">
-	import './app.css';
+<script>
+	import Navbar from '$lib/Navbar.svelte';
+	import '../app.css';
+	export let data;
 </script>
 
+<Navbar user={data.user}/>
 <main>
 	<slot />
 </main>
 
-<style>
+<style lang="postcss">
 	main {
-		width: 600px;
-		padding: 4em;
-		overflow: hidden;
-		color: midnightblue;
+		@apply max-w-xl mx-auto p-4;
 	}
 </style>
