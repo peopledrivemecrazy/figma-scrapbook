@@ -1,3 +1,4 @@
+import { BASE_URL } from '$env/static/private';
 import type { User } from '$lib';
 import { refreshSession } from '$lib/server/arctic';
 import { redirect, type Cookies, type Handle, type HandleFetch } from '@sveltejs/kit';
@@ -61,7 +62,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return redirect(307, '/');
 	}
 
-	const response = await fetch('https://api.figma.com/v1/me', {
+	const response = await fetch(`${BASE_URL}/me`, {
 		headers: {
 			Authorization: `Bearer ${access_token}`
 		}

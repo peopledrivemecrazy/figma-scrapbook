@@ -6,6 +6,9 @@ dependencies:
     version: 2.0.0-next.5
 
 devDependencies:
+  '@figma/rest-api-spec':
+    specifier: ^0.16.0
+    version: 0.16.0
   '@sveltejs/adapter-auto':
     specifier: ^3.0.0
     version: 3.0.0(@sveltejs/kit@2.0.0)
@@ -324,6 +327,10 @@ packages:
   /@eslint/js@9.0.0:
     resolution: {integrity: sha512-RThY/MnKrhubF6+s1JflwUjPEsnCEmYCWwqa/aRISKWNXGZ9epUwft4bUMM35SdKF9xvBrLydAM1RDHd1Z//ZQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    dev: true
+
+  /@figma/rest-api-spec@0.16.0:
+    resolution: {integrity: sha512-J/u7LIHGIKpm9jcJpoAcfUAEfgtuWTtNgIS94mhfdie3p1tgJSZxrJMQxg8u4V7T7SKMpjlqtMr1LwkWf1iC/A==}
     dev: true
 
   /@humanwhocodes/config-array@0.12.3:
