@@ -6,27 +6,25 @@ import { redirect } from '@sveltejs/kit';
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
-	console.log({ code, state });
 	if (!code || !state) {
 		throw new Error('Invalid request');
 	}
 	try {
 		const tokens = await figma.validateAuthorizationCode(code);
-		console.log(tokens);
 		const access_token = tokens.accessToken();
 		const refresh_token = tokens.refreshToken();
-		const expiresIn = tokens.accessTokenExpiresInSeconds();
+		const expires_in = tokens.accessTokenExpiresInSeconds();
 		cookies.set('access_token', access_token, {
 			path: '/',
 			secure: true,
 			httpOnly: true,
-			maxAge: expiresIn
+			maxAge: expires_in
 		});
-		cookies.set('refreshToken', refresh_token, {
+		cookies.set('refresh_token', refresh_token, {
 			path: '/',
 			secure: true,
 			httpOnly: true,
-			maxAge: expiresIn
+			maxAge: expires_in
 		});
 	} catch (e) {
 		if (e instanceof OAuth2RequestError) {
