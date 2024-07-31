@@ -44,6 +44,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { cookies, url, locals, route } = event;
 	const access_token = cookies.get('access_token');
 	const refresh_token = cookies.get('refresh_token');
+	
+	if (route.id?.includes('(webhooks)')) {
+		return await resolve(event);
+	}
+
 	if (url.pathname === '/auth/login' || route.id?.includes('(auth)')) {
 		return await resolve(event);
 	}
