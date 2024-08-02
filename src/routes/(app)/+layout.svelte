@@ -13,6 +13,6 @@
 
 <style lang="postcss">
 	main {
-		@apply max-w-xl mx-auto p-4;
+		@apply mx-auto h-[calc(100vh-64px)] p-4;
 	}
 </style>
