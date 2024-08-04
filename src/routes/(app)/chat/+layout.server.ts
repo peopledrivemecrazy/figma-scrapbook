@@ -4,19 +4,23 @@ import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ locals }) => {
 	const comments = await seedData(locals);
-	const userList = comments.map((e) => {
-		return {
-			id: e.id,
-			user: e.user
-		};
-	});
+	const userList = comments
+		.map((e) => {
+			return {
+				id: e.id,
+				user: e.user,
+				parent: e.parent_id || null
+			};
+		})
+		.filter((e) => e.parent === null);
+
 	return { comments, userList };
 }) satisfies LayoutServerLoad;
 
 const seedData = async (locals: App.Locals) => {
 	if (!locals.user || !locals.user.id) return [];
 
-	const API = await locals.figma();
+	const API = locals.figma();
 	let result = await API.getComments(FILE_KEY);
 
 	const ifUserExists = result.comments.some((e) => e.user.id === locals.user!.id);
@@ -37,6 +41,5 @@ const seedData = async (locals: App.Locals) => {
 
 		result = await API.getComments(FILE_KEY);
 	}
-
 	return result.comments;
 };
