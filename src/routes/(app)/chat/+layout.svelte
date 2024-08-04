@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
 	export let data;
 	import ChatInput from './ChatInput.svelte';
@@ -9,6 +10,7 @@
 			body: JSON.stringify({ input })
 		});
 		input = '';
+		await invalidateAll();
 	};
 	$: activeLink = $page.url.pathname;
 </script>

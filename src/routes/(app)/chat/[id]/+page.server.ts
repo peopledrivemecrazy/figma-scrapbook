@@ -1,3 +1,4 @@
+import { FILE_KEY } from '$env/static/private';
 import type { PageServerLoad } from './$types';
 
 export const load = (async ({ params, parent }) => {
@@ -7,8 +8,17 @@ export const load = (async ({ params, parent }) => {
 	return { id, thread };
 }) satisfies PageServerLoad;
 export const actions = {
-	send: async ({ request }) => {
+	send: async ({ request, locals, params }) => {
+		const { id } = params;
+
 		const body = await request.json();
-		console.log(body);
+
+		const commentToThread = await locals
+			.figma()
+			.postComment(FILE_KEY, body.input, { x: 0, y: 0 }, id);
+
+		return {
+			thread: commentToThread
+		};
 	}
 };

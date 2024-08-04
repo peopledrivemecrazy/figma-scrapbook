@@ -38,6 +38,7 @@
 	"dependencies": {
 		"arctic": "2.0.0-next.5",
 		"figma-api": "^1.11.0",
-		"sveltekit-sse": "^0.13.5"
+		"sveltekit-sse": "^0.13.5",
+		"universal-emoji-parser": "^2.0.11"
 	}
 }
