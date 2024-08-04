@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
-import type { User } from "$lib";
+import * as Figma from 'figma-api';
+import type { User } from 'figma-api/lib/api-types';
 
 // for information about these interfaces
 declare global {
@@ -9,6 +10,7 @@ declare global {
 		interface Locals {
 			access_token: string | undefined;
 			user: User | undefined;
+			figma: () => Figma.Api;
 		}
 		// interface PageData {}
 		// interface PageState {}

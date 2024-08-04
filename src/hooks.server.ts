@@ -2,6 +2,7 @@ import { BASE_URL } from '$env/static/private';
 import type { User } from '$lib';
 import { refreshSession } from '$lib/server/arctic';
 import { redirect, type Cookies, type Handle, type HandleFetch } from '@sveltejs/kit';
+import * as Figma from 'figma-api';
 
 const COOKIE_OPTIONS = {
 	path: '/',
@@ -44,7 +45,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const { cookies, url, locals, route } = event;
 	const access_token = cookies.get('access_token');
 	const refresh_token = cookies.get('refresh_token');
-	
+
 	if (route.id?.includes('(webhooks)')) {
 		return await resolve(event);
 	}
@@ -73,6 +74,14 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	});
 	const user = (await response.json()) satisfies User;
+
+	const figmaApi = new Figma.Api({ oAuthToken: access_token });
+	event.locals.figma = () => figmaApi;
+
+	// locals.approve = async () => {
+	// 	const whoAmI = async () => await figmaApi.getMe();
+	// 	return { whoAmI };
+	// };
 
 	locals.access_token = access_token;
 	locals.user = user;
