@@ -41,10 +41,10 @@
 		</div>
 	</div>
 </div>
-<div class="pl-72">
-	<div class="chatContent flex h-full flex-col">
+<div class="pl-72 pt-[64px]">
+	<div class="chatContent flex h-full flex-col overflow-y-scroll">
 		<slot />
-		<form class="absolute bottom-2 left-0 right-0 flex pl-72">
+		<form class="fixed bottom-2 left-0 right-0 flex pl-72">
 			<ChatInput on:submit={handleSubmit} bind:input />
 		</form>
 	</div>

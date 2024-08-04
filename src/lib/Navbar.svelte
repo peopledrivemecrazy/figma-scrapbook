@@ -8,7 +8,7 @@
 	};
 </script>
 
-<div class="bg-black p-4 text-white">
+<div class="bg-black p-4 text-white fixed w-full mb-[64px]">
 	<div class="flex items-center gap-4 justify-between">
 		<ul class="flex gap-4">
 			<li>
