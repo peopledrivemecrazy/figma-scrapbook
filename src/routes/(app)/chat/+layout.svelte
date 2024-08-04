@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { page } from '$app/stores';
+	import type { User } from 'figma-api/lib/api-types';
 	export let data;
 	import ChatInput from './ChatInput.svelte';
 	let input = '';
