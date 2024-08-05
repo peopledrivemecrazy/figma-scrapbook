@@ -18,11 +18,11 @@ export function POST({ fetch }) {
 		while (condition) {
 			const response = await fetch(`${BASE_URL}/files/${FILE_KEY}`);
 			const file = (await response.json()) as GetFileResponse;
-
-			const [target] = (file as GetFileResponse).document.children.flatMap((e) => e.children);
-			const children = (target as unknown as CanvasNode).children;
-			const todo = children.flatMap((e) => (e as HasTextSublayerTrait).characters);
-			const { error } = emit('message', JSON.stringify({ todo }));
+			console.log(file)
+			// const [target] = (file as GetFileResponse).document.children.flatMap((e) => e.children);
+			// const children = (target as unknown as CanvasNode).children;
+			// const todo = children.flatMap((e) => (e as HasTextSublayerTrait).characters);
+			const { error } = emit('message', JSON.stringify({  }));
 
 			if (error) {
 				return;
