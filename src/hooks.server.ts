@@ -1,4 +1,3 @@
-import { BASE_URL } from '$env/static/private';
 import type { User } from '$lib';
 import { refreshSession } from '$lib/server/arctic';
 import { redirect, type Cookies, type Handle, type HandleFetch } from '@sveltejs/kit';
@@ -68,23 +67,19 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return redirect(307, '/');
 	}
 
-	const response = await fetch(`${BASE_URL}/me`, {
-		headers: {
-			Authorization: `Bearer ${access_token}`
-		}
-	});
-	const user = (await response.json()) satisfies User;
-
 	const figmaApi = new Figma.Api({ oAuthToken: access_token });
 	event.locals.figma = () => figmaApi;
 
-	// locals.approve = async () => {
-	// 	const whoAmI = async () => await figmaApi.getMe();
-	// 	return { whoAmI };
-	// };
+	let user: User;
+
+	try {
+		user = (await event.locals.figma().getMe()) satisfies User;
+		locals.user = user;
+	} catch (e) {
+		console.log(e);
+	}
 
 	locals.access_token = access_token;
-	locals.user = user;
 
 	return await resolve(event);
 };

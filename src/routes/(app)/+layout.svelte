@@ -3,6 +3,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>What's this book?</title>
+</svelte:head>
 {#if data.user}
 	<Navbar user={data.user} />
 

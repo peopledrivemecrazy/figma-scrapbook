@@ -1,9 +1,18 @@
 import { FILE_KEY } from '$env/static/private';
 import type { Vector } from 'figma-api';
 import type { LayoutServerLoad } from './$types';
+import type { Cookies } from '@sveltejs/kit';
+import type { Comment } from 'figma-api/lib/api-types';
 
-export const load = (async ({ locals }) => {
-	const comments = await seedData(locals);
+export const load = (async ({ locals, cookies }) => {
+	const isSeeded = cookies.get('seeded');
+	let comments: Comment[] = [];
+	if (isSeeded) {
+		comments = await getCachedComments();
+	} else {
+		comments = await seedData(locals, cookies);
+	}
+	console.log(comments);
 	const userList = comments
 		.map((e) => {
 			return {
@@ -21,8 +30,26 @@ export const load = (async ({ locals }) => {
 	return { comments, userList: userList.filter((e) => e !== profile), profile };
 }) satisfies LayoutServerLoad;
 
-const seedData = async (locals: App.Locals) => {
+let cachedComments: Comment[] = [];
+
+const getCachedComments = async () => {
+	return cachedComments;
+};
+
+const setCachedComments = (comments: Comment[]) => {
+	cachedComments = comments;
+};
+
+const seedData = async (locals: App.Locals, cookies: Cookies) => {
 	if (!locals.user || !locals.user.id) return [];
+
+	const now = new Date();
+	cookies.set('seeded', String(now), {
+		path: '/',
+		sameSite: true,
+		httpOnly: true,
+		maxAge: 300
+	});
 
 	const API = locals.figma();
 	let result = await API.getComments(FILE_KEY);
@@ -42,5 +69,7 @@ const seedData = async (locals: App.Locals) => {
 
 		result = await API.getComments(FILE_KEY);
 	}
+
+	setCachedComments(result.comments);
 	return result.comments;
 };
