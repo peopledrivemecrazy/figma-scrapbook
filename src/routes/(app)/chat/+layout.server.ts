@@ -7,12 +7,11 @@ import type { Comment } from 'figma-api/lib/api-types';
 export const load = (async ({ locals, cookies }) => {
 	const isSeeded = cookies.get('seeded');
 	let comments: Comment[] = [];
-	if (isSeeded) {
+	if (isSeeded && comments.length) {
 		comments = await getCachedComments();
 	} else {
 		comments = await seedData(locals, cookies);
 	}
-	console.log(comments);
 	const userList = comments
 		.map((e) => {
 			return {
