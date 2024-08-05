@@ -16,8 +16,9 @@
 <textarea
 	name="chatInput"
 	rows="4"
-	class="w-full rounded border border-black mx-4"
+	class="w-full rounded border border-black mx-4 p-2"
 	on:keydown={handleKeydown}
 	enterkeyhint="send"
 	bind:value={input}
+	placeholder="Write a message"
 />
