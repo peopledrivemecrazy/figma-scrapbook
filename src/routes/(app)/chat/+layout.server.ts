@@ -36,9 +36,6 @@ const seedData = async (locals: App.Locals) => {
 			});
 		}
 
-		const whoAmI = await API.getMe();
-		await API.postComment(FILE_KEY, JSON.stringify(whoAmI), { x: 0, y: 0 }, 'USER_DB');
-
 		result = await API.getComments(FILE_KEY);
 	}
 	return result.comments;
