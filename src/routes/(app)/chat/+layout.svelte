@@ -25,10 +25,10 @@
 						<a
 							class="flex w-full gap-4 p-2 hover:bg-yellow-800"
 							href="/chat/{id}"
-							class:bg-yellow-800={activeLink === `/chat/${id}`}
+							class:bg-yellow-800={activeLink.includes(id)}
 						>
 							<img src={user.img_url} alt="{user.handle}'s avatar" class="w-8 rounded-full" />
-							<span> {user.handle}</span>
+							<span> {user.handle} {activeLink.includes(id)}</span>
 						</a>
 					</li>
 				{/each}
