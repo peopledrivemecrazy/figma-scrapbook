@@ -13,8 +13,12 @@ export const load = (async ({ locals }) => {
 			};
 		})
 		.filter((e) => e.parent === null);
-	const [profile] = userList.filter((e) => e.user.id === locals.user?.id);
-	return { comments, userList, profile };
+
+	const [profile] = userList.filter((e) => e.user.id === locals.user!.id);
+
+	userList.filter((e) => e !== profile);
+
+	return { comments, userList: userList.filter((e) => e !== profile), profile };
 }) satisfies LayoutServerLoad;
 
 const seedData = async (locals: App.Locals) => {

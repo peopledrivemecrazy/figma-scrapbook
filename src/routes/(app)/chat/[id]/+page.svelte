@@ -4,23 +4,23 @@
 	import uEmojiParser from 'universal-emoji-parser';
 
 	export let data: PageData;
-	$: curentUser = data.userList.find((e) => e.id === data.id);
+	$: curentUser = data.profile;
 </script>
 
 <svelte:head>
-	<title>{curentUser?.user.handle}'s Scrapbook</title>
+	<title>{curentUser.user.handle}'s Scrapbook</title>
 </svelte:head>
 
 <div class="p-4">
 	{#if data.thread.length}
 		<ul>
-			{#each data.thread as { message, user, id, }}
+			{#each data.thread as { message, user, id }}
 				<li class="my-2 flex justify-between bg-yellow-400/90 p-2">
 					{uEmojiParser.parseToUnicode(message)}
 					<div class="flex items-center gap-4">
 						<img src={user.img_url} alt="{user.handle}'s avatar" class="w-8 rounded-full" />
 						<p>
-							{user.handle}  
+							{user.handle}
 						</p>
 					</div>
 				</li>

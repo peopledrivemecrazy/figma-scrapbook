@@ -20,6 +20,21 @@
 	<div class="no-scrollbar flex grow flex-col gap-y-5 overflow-y-auto bg-black">
 		<div>
 			<ul>
+				<li>
+					<a
+						class="flex w-full gap-4 p-2 hover:bg-yellow-800"
+						href="/chat/{data.profile.id}"
+						class:bg-yellow-800={activeLink.includes(data.profile.id)}
+					>
+						<img
+							src={data.profile.user.img_url}
+							alt="{data.profile.user.handle}'s avatar"
+							class="w-8 rounded-full"
+						/>
+						<span> Your Profile </span>
+					</a>
+				</li>
+
 				{#each data.userList as { user, id }}
 					<li>
 						<a
@@ -28,7 +43,7 @@
 							class:bg-yellow-800={activeLink.includes(id)}
 						>
 							<img src={user.img_url} alt="{user.handle}'s avatar" class="w-8 rounded-full" />
-							<span> {user.handle} {activeLink.includes(id)}</span>
+							<span> {user.handle}</span>
 						</a>
 					</li>
 				{/each}
