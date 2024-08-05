@@ -1,16 +1,21 @@
 <script lang="ts">
-	import type { CanvasNode, ComponentNode, HasTextSublayerTrait } from '@figma/rest-api-spec';
+	import type { CanvasNode, GetFileResponse, HasTextSublayerTrait } from '@figma/rest-api-spec';
 	import type { PageData } from './$types';
 
-	export let data: PageData;
+	import { source } from 'sveltekit-sse';
+	const connection = source('/source');
 
-	const [target] = data.file.document.children.flatMap((e) => e.children);
-	const children = (target as unknown as CanvasNode).children;
-	const todo = children.flatMap((e) => (e as HasTextSublayerTrait).characters);
+	$: data = connection.select('message').json(function or({ error, raw, previous }) {
+		return previous as { todo: string[] };
+	});
 </script>
 
-<ul>
-	{#each todo as item}
-		<li>{item}</li>
-	{/each}
-</ul>
+<div class="grid h-screen w-screen place-items-center">
+	{#if $data?.todo}
+		<ul>
+			{#each $data.todo as item}
+				<li>{item}</li>
+			{/each}
+		</ul>
+	{/if}
+</div>
