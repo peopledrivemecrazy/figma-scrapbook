@@ -1,6 +1,10 @@
+import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 
-export const load = (async () => {
+export const load = (async ({ parent }) => {
+	const { profile } = await parent();
+	// console.log(data);
+	redirect(307, `/chat/${profile.id}`);
 	return {};
 }) satisfies PageServerLoad;
 export const ssr = false;

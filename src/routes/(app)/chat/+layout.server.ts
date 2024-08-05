@@ -1,5 +1,5 @@
 import { FILE_KEY } from '$env/static/private';
-import type { FrameOffset } from 'figma-api';
+import type { Vector } from 'figma-api';
 import type { LayoutServerLoad } from './$types';
 
 export const load = (async ({ locals }) => {
@@ -13,8 +13,8 @@ export const load = (async ({ locals }) => {
 			};
 		})
 		.filter((e) => e.parent === null);
-
-	return { comments, userList };
+	const [profile] = userList.filter((e) => e.user.id === locals.user?.id);
+	return { comments, userList, profile };
 }) satisfies LayoutServerLoad;
 
 const seedData = async (locals: App.Locals) => {
@@ -29,7 +29,7 @@ const seedData = async (locals: App.Locals) => {
 			const [firstComment] = result.comments;
 			const totalComments = result.comments.length;
 			const offset = 50;
-			const firstCommentY = (firstComment.client_meta as FrameOffset).node_offset.y || 0;
+			const firstCommentY = (firstComment.client_meta as Vector).y || 0;
 			await API.postComment(FILE_KEY, 'Profile', {
 				x: 0,
 				y: firstCommentY + offset * totalComments
