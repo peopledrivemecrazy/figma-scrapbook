@@ -87,4 +87,4 @@ const seedData = async (locals: App.Locals, cookies: Cookies) => {
 
 ![alt text](scrapbook.png)
 
-#### If you are reading this doc, you might have already seen the demo, please open an issue if you want to experiment it yourself, I will soon be shutting down the hosted app.
+#### If you are reading this doc, you might have already seen the demo, please open an issue if you have difficulties setting up. The hosted version is no longer available.
