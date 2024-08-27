@@ -52,8 +52,8 @@ const seedData = async (locals: App.Locals, cookies: Cookies) => {
 
 	const API = locals.figma();
 	let result = await API.getComments(FILE_KEY);
-
 	const ifUserExists = result.comments.some((e) => e.user.id === locals.user!.id);
+
 	if (!ifUserExists) {
 		if (result.comments.length > 0) {
 			const [firstComment] = result.comments;
