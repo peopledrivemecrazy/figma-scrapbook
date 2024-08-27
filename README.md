@@ -1,38 +1,90 @@
-# create-svelte
+# Figma as a database - Do not use in production!
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+Uses Figma's REST APIs to grab text nodes of target file.
+Create your app from https://www.figma.com/developers/apps and grab client id and secret for OAuth to work.
 
-## Creating a project
+[Docs](https://www.figma.com/developers/api) here.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## How todo list works
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+![alt text](figma.png) Insert your text nodes on the editor.
 
-# create a new project in my-app
-npm create svelte@latest my-app
+Loading this endpoint gives the text node
+
+```ts
+const response = await fetch(`${BASE_URL}/files/${FILE_KEY}`);
+const file = (await response.json()) as GetFileResponse;
+//process first element the array assuming you have only one child.
+const [target] = data.file.document.children.flatMap((e) => e.children);
+const children = (target as unknown as CanvasNode).children;
+const todo = children.flatMap((e) => (e as HasTextSublayerTrait).characters);
+// todo: string[]
 ```
 
-## Developing
+Returns [GetFileResponse](https://github.com/figma/rest-api-spec/blob/main/dist/api_types.ts#L4164)
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Env vars
 
-```bash
-npm run dev
+```
+BASE_URL=https://api.figma.com/v1
+APP_NAME=
+CLIEND_ID=
+CLIENT_SECRET=
+ACCESS_TOKEN=
+APP_URL=http://localhost:5173
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+
+# Project Vars
+FILE_KEY= # First part you see in the URL https://www.figma.com/design/<FILE_KEY>
+
 ```
 
-## Building
+![alt text](home.png)
 
-To create a production version of your app:
+## Scrapbook system
 
-```bash
-npm run build
+Uses the figma comment API to maintain a thread.
+
+### Seed initial data of the user
+
+See [+layout.server.ts](<src/routes/(app)/chat/+layout.server.ts#L42>)
+
+```ts
+const seedData = async (locals: App.Locals, cookies: Cookies) => {
+	if (!locals.user || !locals.user.id) return [];
+
+	const now = new Date();
+	// store a local copy in server to prevent API calls
+	cookies.set('seeded', String(now), {
+		path: '/',
+		sameSite: true,
+		httpOnly: true,
+		maxAge: 300
+	});
+	const API = locals.figma();
+	let result = await API.getComments(FILE_KEY);
+	const ifUserExists = result.comments.some((e) => e.user.id === locals.user!.id);
+
+	if (!ifUserExists) {
+		if (result.comments.length > 0) {
+			const [firstComment] = result.comments;
+			const totalComments = result.comments.length;
+			const offset = 50;
+			const firstCommentY = (firstComment.client_meta as Vector).y || 0;
+			await API.postComment(FILE_KEY, 'Profile', {
+				x: 0,
+				y: firstCommentY + offset * totalComments
+			});
+		}
+
+		result = await API.getComments(FILE_KEY);
+	}
+
+	setCachedComments(result.comments);
+	return result.comments;
+};
 ```
 
-You can preview the production build with `npm run preview`.
+![alt text](scrapbook.png)
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+#### If you are reading this doc, you might have already seen the demo, please open an issue if you want to experiment it yourself, I will soon be shutting down the hosted app.
